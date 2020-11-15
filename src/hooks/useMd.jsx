@@ -2,32 +2,70 @@ import {useEffect} from "react";
 import Reveal from "reveal.js";
 import Markdown from "reveal.js/plugin/markdown/markdown.esm";
 
-function useMd(string){
-    let jsx=`
-    <section data-markdown>
-       <textarea data-template>
-            ## Slide 1
-            A paragraph with some text and a [link](http://hakim.se).
-            ---
-            ## Slide 2
-            ---
-            ## Slide 3
-       </textarea>
-    </section>
-   <section data-markdown>
-       <textarea data-template>
-           ## 这是第二页
-           - 第一项
-           - 第二项
-           - 第三项
-           > asdasdasd
-       </textarea>
-   </section>
+function useMd(string) {
+    const isMain = str => (/#{1,2}(?!#)/).test(str)
+    const isSub = str => (/^#{3}(?!#)/).test(str)
+    let array = string.split(/\n(?=\s*#+?)/).filter(s => s !== "").map(s => s.trim())
+    let html = ''
+    for (let i = 0; i < array.length - 1; i++) {
+        if (array[i + 1] !== undefined) {
 
-`   const isMain=str=>(/#{1,2}(?!#)/).test(str)
-    let array=string.split(/\n(?=\s*#+?)/).filter(s=>s!=="").map(s=>s.trim())
-    let html=''
-    for(let item of array){
-      if()
+            if (isMain(array[i]) && isMain(array[i + 1])) {
+                html += `
+            <section data-markdown>
+               <textarea data-template>
+                 ${array[i]}
+               </textarea>
+            </section>
+          `
+            } else if (isMain(array[i]) && isSub(array[i + 1])) {
+                html += `
+            <section>
+              <section data-markdown>
+               <textarea data-template>
+                 ${array[i]}
+               </textarea>
+              </section>
+            </section>
+          `
+            } else if (isSub(array[i]) && isSub(array[i + 1])) {
+                html += `
+              <section data-markdown>
+               <textarea data-template>
+                 ${array[i]}
+               </textarea>
+              </section>
+          `
+            } else if (isSub(array[i]) && isMain(array[i + 1])) {
+                html += `
+              <section data-markdown>
+               <textarea data-template>
+                 ${array[i]}
+               </textarea>
+              </section>
+          `
+            }
+        } else {
+            if (isMain(array[i])) {
+                html += `
+              <section data-markdown>
+               <textarea data-template>
+                 ${array[i]}
+               </textarea>
+              </section>
+          `
+            } else if (isSub(array[i])) {
+                html += `
+                    <section>
+                      <section data-markdown>
+                       <textarea data-template>
+                         ${array[i]}
+                       </textarea>
+                      </section>
+                    </section>          
+`
+            }
+        }
     }
+    return html
 }

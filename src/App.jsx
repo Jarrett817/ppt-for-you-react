@@ -1,5 +1,5 @@
-import Presentation from "./views/Presentation";
-import './App.css'
+import Presentation from "./views/presentation/Presentation";
+import './App.less'
 import React from "react";
 function App() {
   return (

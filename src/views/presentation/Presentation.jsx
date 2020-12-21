@@ -4,6 +4,8 @@ import 'reveal.js/dist/theme/black.css'
 import Reveal from 'reveal.js';
 import Markdown from 'reveal.js/plugin/markdown/markdown.esm.js';
 import {useMd} from '../../hooks/useMd'
+import ControlPanel from "../control/ControlPanel";
+
 function Presentation() {
     useEffect(() => {
         Reveal.initialize(
@@ -13,8 +15,8 @@ function Presentation() {
                 ]
             }
         );
-    },[])
-    let html=useMd(`
+    }, [])
+    let html = useMd(`
 # 开班典礼1
   - x
   - y
@@ -39,8 +41,11 @@ f
     `)
 
     return (
-        <div className="reveal">
-            <div className="slides" dangerouslySetInnerHTML={{__html: html}}/>
+        <div>
+            <div className="reveal">
+                <div className="slides" dangerouslySetInnerHTML={{__html: html}}/>
+            </div>
+            <ControlPanel></ControlPanel>
         </div>
     )
 }
